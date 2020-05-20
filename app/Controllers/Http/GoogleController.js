@@ -1,7 +1,6 @@
 'use strict'
 const axios = require('axios')
 const cheerio = require('cheerio')
-const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfp2G5bQbfmvnCUMY0Xt6NQYeoLGKuYq_sVi-A5PXgKWOVd4A/viewform'
 
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -22,8 +21,9 @@ class GoogleController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    const url = request.all()
     let qq = ''
-    await axios.get(url).then( (res) => {
+    await axios.get(url.url).then( (res) => {
       const $ = cheerio.load(res.data)
       $('body').each( (index , element) => {  
          const title = $(element).find('script').html()
@@ -33,9 +33,7 @@ class GoogleController {
          const ready = data[1][1]
          const rr = JSON.stringify(ready)
          qq = JSON.parse(rr)
-
   })
-
   })
   const last = []
   let i = 0
@@ -51,7 +49,6 @@ if (element[4]){
 last[i] = {
   question: element[1],
   answers : answer
-  
 }
     i++
 }
